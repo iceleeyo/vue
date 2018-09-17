@@ -29,7 +29,7 @@ public class WebLogAspect {
 
     ThreadLocal<Long> startTime = new ThreadLocal<>();
 
-    @Pointcut("execution(public * com.boylegu.springboot_vue.controller..*.*(..))")
+    @Pointcut("execution(public * cn.com.bsfit.frms.vue.controller..*.*(..))")
     public void webLog(){}
 
     @Before("webLog()")

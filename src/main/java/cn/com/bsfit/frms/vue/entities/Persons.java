@@ -8,7 +8,9 @@ import java.io.Serializable;
 @Table(name = "persons")
 public class Persons implements Serializable {
 
-    @Id
+	private static final long serialVersionUID = 1L;
+
+	@Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 

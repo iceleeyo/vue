@@ -6,8 +6,10 @@ package cn.com.bsfit.frms.vue.exception;
 
 
 public class ProjException extends Exception {
+	
+	private static final long serialVersionUID = 1L;
 
-    public ProjException(String message) {
+	public ProjException(String message) {
         super(message);
     }
 
