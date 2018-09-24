@@ -3,6 +3,7 @@
 /.classpath
 /target
 .idea/
+*/node_modules/
 *.iml
 /log/
 /logs/

@@ -4,14 +4,14 @@
 
 <script>
 
-    export default {
-        name: 'db-sidebar',
-        data() {
-            return {
-                msg: 'Dashboard'
-            }
-        }
+  export default {
+    name: 'db-sidebar',
+    data () {
+     return {
+       msg: '当日预警池'
+     }
     }
+  }
 
 </script>
 

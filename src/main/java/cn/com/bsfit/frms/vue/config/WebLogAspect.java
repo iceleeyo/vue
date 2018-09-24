@@ -14,12 +14,6 @@ import org.springframework.web.context.request.ServletRequestAttributes;
 import javax.servlet.http.HttpServletRequest;
 import java.util.Arrays;
 
-/**
-/**
- * Created by gubaoer on 17/7/3.
- */
-
-
 @Aspect
 @Order(5)
 @Component

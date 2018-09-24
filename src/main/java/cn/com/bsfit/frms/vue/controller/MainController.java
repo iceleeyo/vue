@@ -33,7 +33,7 @@ public class MainController {
     @Autowired
     private PersonsRepository personsRepository;
 
-    @Value(("${com.boylegu.paginatio.max-per-page}"))
+    @Value(("${cn.com.bsfit.frms.vue.max-per-page:10}"))
     Integer maxPerPage;
 
     @RequestMapping(value = "/sex", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
