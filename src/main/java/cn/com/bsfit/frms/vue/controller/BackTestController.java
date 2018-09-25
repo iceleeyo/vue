@@ -2,8 +2,10 @@ package cn.com.bsfit.frms.vue.controller;
 
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.Date;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
@@ -34,7 +36,8 @@ public class BackTestController {
 			final @RequestParam(value = "secCode", required = false) String secCode,
 			final @RequestParam(value = "secName", required = false) String secName,
 			final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
-			final @RequestParam(value = "limit", required = false, defaultValue = "5") int limit) throws ParseException {
+			final @RequestParam(value = "limit", required = false, defaultValue = "5") int limit)
+			throws ParseException {
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		// 开始时间
 		Date beginDate = begin == null || "".equals(begin.trim()) ? getStartTime(0) : sdf.parse(begin);
@@ -53,9 +56,61 @@ public class BackTestController {
 		return new ResponseEntity<PageInfo<Map<String, Object>>>(appsPageInfo, HttpStatus.OK);
 	}
 
+	@RequestMapping(value = "/getBackTestAllList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getBackTestAllList(final @RequestParam(value = "begin", required = false) String begin,
+			final @RequestParam(value = "end", required = false) String end,
+			final @RequestParam(value = "secCode", required = false) String secCode,
+			final @RequestParam(value = "secName", required = false) String secName) throws ParseException {
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		// 开始时间
+		Date beginDate = begin == null || "".equals(begin.trim()) ? getStartTime(0) : sdf.parse(begin);
+		// 结束时间
+		Date endDate = end == null || "".equals(end.trim()) ? getnowEndTime(0) : sdf.parse(end);
+
+		String secCodeStr = secCode == null || "".equals(secCode.trim()) ? "%" : secCode.trim() + "%";
+		String secNameStr = secName == null || "".equals(secName.trim()) ? "%" : secName.trim() + "%";
+
+		List<Map<String, Object>> appList = backTestMapper.findAll(beginDate, endDate, secCodeStr, secNameStr);
+
+		return new ResponseEntity<List<Map<String, Object>>>(appList, HttpStatus.OK);
+	}
+
+	@RequestMapping(value = "/getGfAllList", method = RequestMethod.GET, produces = MediaType.APPLICATION_JSON_VALUE)
+	public ResponseEntity<?> getGfAllList(final @RequestParam(value = "testingId", required = false, defaultValue = "530") long testingId) {
+		List<Map<String, Object>> res = backTestMapper.findGfline(testingId);
+		List<Map<String, Object>> last = backTestMapper.findGfTab(testingId);
+
+		Map<String, Object> data = new HashMap<>();
+		List<Object> buyTimes = new ArrayList<>();
+		List<Object> returnRates = new ArrayList<>();
+		List<Object> returnRateBms = new ArrayList<>();
+		for(Map<String, Object> map : res) {
+			for(Map.Entry<String, Object> entry : map.entrySet()) {
+				String key = entry.getKey();
+				Object value = entry.getValue();
+				if("BUY_TIME".equals(key)) {
+					buyTimes.add(value);
+				}
+				if("RETURN_RATE".equals(key)) {
+					returnRates.add(value);
+				}
+				if("RETURN_RATE_BM".equals(key)) {
+					returnRateBms.add(value);
+				}
+			}
+		}
+		
+		data.put("list", res);
+		data.put("buyTimes", buyTimes);
+		data.put("returnRates", returnRates);
+		data.put("returnRateBms", returnRateBms);
+		data.put("table", last);
+		return new ResponseEntity<Map<String, Object>>(data, HttpStatus.OK);
+	}
+
 	/**
 	 * 获取n天前的开始时间
-	 *
+	 * 
 	 * @param days
 	 * @return
 	 */

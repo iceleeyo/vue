@@ -34,8 +34,7 @@
       @size-change="handleSizeChange"
       @current-change="handleCurrentChange"
       :current-page="currentPage"
-      :page-sizes="pageSizes"
-      :page-size="pageSize" layout="total, sizes, prev, pager, next, jumper" :total="total">
+      :page-size="pageSize" layout="total, prev, pager, next, jumper" :total="total">
     </el-pagination>
   </div>
 
@@ -52,7 +51,7 @@
     return {
       tableData: [],
       apiUrl: 'http://127.0.0.1:8000/api/backTest/getBackTestAll',
-      total: 0,
+      total: 1000,
       pageSize: 5,
       pageSizes: [5, 10, 20, 30],
       currentPage: 1,
@@ -63,27 +62,29 @@
   },
 
   mounted () {
-    console.log("");
-    this.getCustomers("this.pageSize:" + this.pageSize);
-    this.getCustomers("this.total:" + this.total);
+    this.getCustomers(this.currentPage, this.pageSize);
     Bus.$on('filterResultData', (data) => {
       this.tableData = data.list;
-    this.total = data.total;
-    this.pageSize = data.pageSize;
-    this.secCode = data.secCode;
-    this.secName = data.secName;
-    this.pickerModel = data.pickerModel;
+      this.total = data.total;
+//      this.pageSize = data.pageSize;
+      this.secCode = data.secCode;
+      this.secName = data.secName;
+      this.pickerModel = data.pickerModel;
   })
   },
 
   methods: {
     handleSizeChange(size) {
+      console.log("size:" + size);
       this.pageSize = size;
-      if (this.currentPage === 1) {
-        this.getCustomers();
-      } else {
-        this.currentPage = 1;
-      }
+      console.log("this.pageSize:" + this.pageSize);
+//      this.currentPage = 1;
+      this.getCustomers(this.currentPage, this.pageSize);
+//      if (this.currentPage === 1) {
+//        this.getCustomers(this.currentPage, this.pagesize);
+//      } else {
+//        this.currentPage = 1;
+//      }
 //        this.getCustomers();
 //        this.pageSize = size;
 //        this.getCustomers();
@@ -92,10 +93,10 @@
 
     handleCurrentChange(val) {
       this.currentPage = val;
-      this.getCustomers();
+      this.getCustomers(this.currentPage, this.pagesize);
     },
 
-    getCustomers: function () {
+    getCustomers: function (currentPage, pageSize) {
       var begin = this.pickerModel ? this.pickerModel[0] : '';
       var end = this.pickerModel ? this.pickerModel[1] : '';
       var beginStr = begin instanceof Date ? this.$moment(begin, this.$moment.ISO_8601).format("YYYY-MM-DD HH:mm:ss") : begin;
@@ -103,8 +104,8 @@
 
       this.$axios.get(this.apiUrl, {
         params: {
-          page: this.currentPage,
-          limit: this.pageSize,
+          page: currentPage,
+          limit: pageSize,
           secCode: this.secCode,
           secName: this.secName,
           begin: beginStr,
@@ -112,8 +113,8 @@
         }
       }).then((response) => {
         this.tableData = response.data.list;
-      this.total = response.data.total;
-      this.pageSize = response.data.pageSize;
+        this.total = response.data.total;
+//        this.pageSize = response.data.pageSize;
     }).catch(function (response) {
       console.log(response)
     })
@@ -131,8 +132,7 @@
   },
 
   percentFormatter(row, column) {
-    var percent = Math.round(parseFloat(row.RETURN_RATE)) / 10000.00 + "%";
-    var price = (parseFloat(row.RETURN_RATE) / 10000).toFixed(2);
+    var percent = Math.round(parseFloat(row.RETURN_RATE)) / 100.00 + "%";
     return percent;
   }
   }

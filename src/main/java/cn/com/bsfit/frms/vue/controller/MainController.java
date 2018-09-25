@@ -26,6 +26,11 @@ import cn.com.bsfit.frms.vue.dao.PersonsRepository;
 import cn.com.bsfit.frms.vue.entities.Persons;
 
 
+/**
+ * searchtablepagination
+ * @author Bangsun
+ *
+ */
 @RestController
 @RequestMapping("/api/persons")
 public class MainController {

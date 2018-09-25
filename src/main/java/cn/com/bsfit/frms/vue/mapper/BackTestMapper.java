@@ -17,4 +17,11 @@ public interface BackTestMapper {
 
 	@Delete("DELETE FROM back_testing_trade WHERE id =#{id}")
 	void delete(final Long id);
+	
+	
+	@Select("select return_rate / 100.00 return_rate,return_rate_bm / 100.00 return_rate_bm,TO_CHAR(buy_time, 'YYYY-MM-DD') BUY_TIME from back_testing_result_census where testing_id=#{testingId} order by buy_time asc")
+	List<Map<String, Object>> findGfline(@Param("testingId") long testingId);
+	
+	@Select("select a.*　from (select a.*,row_number()over(order by buy_time desc) rn  from back_testing_result_census a where a.testing_id=#{testingId}) a where rn=1")
+	List<Map<String, Object>> findGfTab(@Param("testingId") long testingId);
 }
