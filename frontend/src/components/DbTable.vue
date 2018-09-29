@@ -52,7 +52,7 @@
       tableData: [],
       apiUrl: 'http://127.0.0.1:8000/api/backTest/getBackTestAll',
       total: 1000,
-      pageSize: 5,
+      pageSize: 10,
       pageSizes: [5, 10, 20, 30],
       currentPage: 1,
       secCode: '',
@@ -105,7 +105,7 @@
       this.$axios.get(this.apiUrl, {
         params: {
           page: currentPage,
-          limit: pageSize,
+          limit: 10,
           secCode: this.secCode,
           secName: this.secName,
           begin: beginStr,

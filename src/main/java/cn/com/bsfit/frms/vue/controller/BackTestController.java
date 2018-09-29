@@ -38,19 +38,20 @@ public class BackTestController {
 			final @RequestParam(value = "page", required = false, defaultValue = "1") int page,
 			final @RequestParam(value = "limit", required = false, defaultValue = "5") int limit)
 			throws ParseException {
+		// TODO 最新TESTING_ID
+		Long testingId = backTestMapper.findTestingId();
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		// 开始时间
 		Date beginDate = begin == null || "".equals(begin.trim()) ? getStartTime(0) : sdf.parse(begin);
 		// 结束时间
 		Date endDate = end == null || "".equals(end.trim()) ? getnowEndTime(0) : sdf.parse(end);
 
-		System.out.println("page:" + page + " limit:" + limit);
-
 		String secCodeStr = secCode == null || "".equals(secCode.trim()) ? "%" : secCode.trim() + "%";
 		String secNameStr = secName == null || "".equals(secName.trim()) ? "%" : secName.trim() + "%";
 
 		PageHelper.startPage(page, limit);
-		List<Map<String, Object>> appList = backTestMapper.findAll(beginDate, endDate, secCodeStr, secNameStr);
+		List<Map<String, Object>> appList = backTestMapper.findAll(testingId, beginDate, endDate, secCodeStr, secNameStr);
 		PageInfo<Map<String, Object>> appsPageInfo = new PageInfo<>(appList);
 
 		return new ResponseEntity<PageInfo<Map<String, Object>>>(appsPageInfo, HttpStatus.OK);
@@ -61,6 +62,9 @@ public class BackTestController {
 			final @RequestParam(value = "end", required = false) String end,
 			final @RequestParam(value = "secCode", required = false) String secCode,
 			final @RequestParam(value = "secName", required = false) String secName) throws ParseException {
+		// TODO 最新TESTING_ID
+		Long testingId = backTestMapper.findTestingId();
+
 		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
 		// 开始时间
 		Date beginDate = begin == null || "".equals(begin.trim()) ? getStartTime(0) : sdf.parse(begin);
@@ -70,7 +74,7 @@ public class BackTestController {
 		String secCodeStr = secCode == null || "".equals(secCode.trim()) ? "%" : secCode.trim() + "%";
 		String secNameStr = secName == null || "".equals(secName.trim()) ? "%" : secName.trim() + "%";
 
-		List<Map<String, Object>> appList = backTestMapper.findAll(beginDate, endDate, secCodeStr, secNameStr);
+		List<Map<String, Object>> appList = backTestMapper.findAll(testingId, beginDate, endDate, secCodeStr, secNameStr);
 
 		return new ResponseEntity<List<Map<String, Object>>>(appList, HttpStatus.OK);
 	}

@@ -29,7 +29,7 @@ public class BackTestTradeController {
 			final @RequestParam(value = "secCode", required = false) String secCode,
 			final @RequestParam(value = "secName", required = false) String secName,
 			final @RequestParam(value = "page", required = false) Integer pages,
-			final @RequestParam(value = "pageSize", required = false) int pageSize) throws ParseException {
+			final @RequestParam(value = "pageSize", required = false, defaultValue="10") int pageSize) throws ParseException {
 		
 		Pageable pageable = new PageRequest(pages == null ? 1 : pages - 1, pageSize,
 				new Sort(Direction.DESC, "BUY_TIME"));

@@ -13,9 +13,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurerAdapter
 
 import com.alibaba.fastjson.support.spring.FastJsonHttpMessageConverter;
 
-/**
- * CORS configuration
- */
 @Configuration
 public class CORSConfig {
 
@@ -29,11 +26,35 @@ public class CORSConfig {
 			}
 		};
 	}
-	
+
+//	private CorsConfiguration corsConfiguration() {
+//		CorsConfiguration corsConfiguration = new CorsConfiguration();
+//		corsConfiguration.addAllowedOrigin(CorsConfiguration.ALL);
+//		corsConfiguration.addAllowedHeader(CorsConfiguration.ALL);
+//		corsConfiguration.addAllowedMethod(CorsConfiguration.ALL);
+//		return corsConfiguration;
+//	}
+
 	@Bean
 	public HttpMessageConverters httpMessageConverters() {
 		final FastJsonHttpMessageConverter fastjson = new FastJsonHttpMessageConverter();
 		fastjson.setSupportedMediaTypes(Arrays.asList(MediaType.APPLICATION_JSON_UTF8, MediaType.APPLICATION_JSON));
 		return new HttpMessageConverters(fastjson);
-	} 
+	}
+
+//	@Bean
+//	public FilterRegistrationBean filterRegistrationBean() {
+//		FilterRegistrationBean registrationBean = new FilterRegistrationBean();
+//
+//		UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
+//		source.registerCorsConfiguration("/**", corsConfiguration()); // 4
+//		CorsFilter filter = new CorsFilter(source);
+//
+//		registrationBean.setFilter(filter);
+//		List<String> urlPatterns = new ArrayList<String>();
+//		urlPatterns.add("/api/*");
+//		registrationBean.setUrlPatterns(urlPatterns);
+//
+//		return registrationBean;
+//	}
 }
