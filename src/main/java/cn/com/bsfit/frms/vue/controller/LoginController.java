@@ -23,7 +23,7 @@ public class LoginController {
 	@Autowired
 	private UsersMapper usersMapper;
 
-	@RequestMapping(value = "/login")
+	@RequestMapping(value = "/login", headers={})
 	public ResponseEntity<?> login(final @RequestBody Map<String, String> reqMap) {
 
 		String username = reqMap.get("username");

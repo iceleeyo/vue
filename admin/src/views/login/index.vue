@@ -100,7 +100,7 @@ export default {
           this.loading = true
           this.axiosForm.username = this.loginForm.username
           this.axiosForm.password = this.$md5(this.loginForm.password)
-          this.$axios.post('http://127.0.0.1:8000/api/login/login', this.axiosForm).then((response) => {
+          this.$axios.post('api/login/login', this.axiosForm).then((response) => {
             this.loading = false
             this.loginFlag = response.data.success
             if (!this.loginFlag) {

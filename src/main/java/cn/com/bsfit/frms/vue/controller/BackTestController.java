@@ -41,17 +41,18 @@ public class BackTestController {
 		// TODO 最新TESTING_ID
 		Long testingId = backTestMapper.findTestingId();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		// 开始时间
-		Date beginDate = begin == null || "".equals(begin.trim()) ? getStartTime(0) : sdf.parse(begin);
+		Date beginDate = begin == null || "".equals(begin.trim()) ? getStartTime(0) : getDateStartTime(sdf.parse(begin));
 		// 结束时间
-		Date endDate = end == null || "".equals(end.trim()) ? getnowEndTime(0) : sdf.parse(end);
+		Date endDate = end == null || "".equals(end.trim()) ? getnowEndTime(0) : getDateEndTime(sdf.parse(end));
 
 		String secCodeStr = secCode == null || "".equals(secCode.trim()) ? "%" : secCode.trim() + "%";
 		String secNameStr = secName == null || "".equals(secName.trim()) ? "%" : secName.trim() + "%";
 
 		PageHelper.startPage(page, limit);
-		List<Map<String, Object>> appList = backTestMapper.findAll(testingId, beginDate, endDate, secCodeStr, secNameStr);
+		List<Map<String, Object>> appList = backTestMapper.findAll(testingId, beginDate, endDate, secCodeStr,
+				secNameStr);
 		PageInfo<Map<String, Object>> appsPageInfo = new PageInfo<>(appList);
 
 		return new ResponseEntity<PageInfo<Map<String, Object>>>(appsPageInfo, HttpStatus.OK);
@@ -65,11 +66,11 @@ public class BackTestController {
 		// TODO 最新TESTING_ID
 		Long testingId = backTestMapper.findTestingId();
 
-		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd");
 		// 开始时间
-		Date beginDate = begin == null || "".equals(begin.trim()) ? getStartTime(0) : sdf.parse(begin);
+		Date beginDate = begin == null || "".equals(begin.trim()) ? getStartTime(0) : getDateStartTime(sdf.parse(begin));
 		// 结束时间
-		Date endDate = end == null || "".equals(end.trim()) ? getnowEndTime(0) : sdf.parse(end);
+		Date endDate = end == null || "".equals(end.trim()) ? getnowEndTime(0) : getDateEndTime(sdf.parse(end));
 
 		String secCodeStr = secCode == null || "".equals(secCode.trim()) ? "%" : secCode.trim() + "%";
 		String secNameStr = secName == null || "".equals(secName.trim()) ? "%" : secName.trim() + "%";
@@ -88,22 +89,22 @@ public class BackTestController {
 		List<Object> buyTimes = new ArrayList<>();
 		List<Object> returnRates = new ArrayList<>();
 		List<Object> returnRateBms = new ArrayList<>();
-		for(Map<String, Object> map : res) {
-			for(Map.Entry<String, Object> entry : map.entrySet()) {
+		for (Map<String, Object> map : res) {
+			for (Map.Entry<String, Object> entry : map.entrySet()) {
 				String key = entry.getKey();
 				Object value = entry.getValue();
-				if("BUY_TIME".equals(key)) {
+				if ("BUY_TIME".equals(key)) {
 					buyTimes.add(value);
 				}
-				if("RETURN_RATE".equals(key)) {
+				if ("RETURN_RATE".equals(key)) {
 					returnRates.add(value);
 				}
-				if("RETURN_RATE_BM".equals(key)) {
+				if ("RETURN_RATE_BM".equals(key)) {
 					returnRateBms.add(value);
 				}
 			}
 		}
-		
+
 		data.put("list", res);
 		data.put("buyTimes", buyTimes);
 		data.put("returnRates", returnRates);
@@ -118,7 +119,7 @@ public class BackTestController {
 	 * @param days
 	 * @return
 	 */
-	private static Date getStartTime(int days) {
+	private Date getStartTime(int days) {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 0);
 		cal.set(Calendar.MINUTE, 0);
@@ -135,7 +136,7 @@ public class BackTestController {
 	 * @param days
 	 * @return
 	 */
-	public static Date getnowEndTime(int days) {
+	private Date getnowEndTime(int days) {
 		Calendar cal = Calendar.getInstance();
 		cal.set(Calendar.HOUR_OF_DAY, 23);
 		cal.set(Calendar.MINUTE, 59);
@@ -143,6 +144,40 @@ public class BackTestController {
 		cal.set(Calendar.MILLISECOND, 999);
 
 		cal.add(Calendar.DAY_OF_MONTH, -1 * days);
+		return cal.getTime();
+	}
+
+	/**
+	 * 获取当前时间的开始时间
+	 * 
+	 * @param date
+	 * @return
+	 */
+	private Date getDateStartTime(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		cal.set(Calendar.HOUR_OF_DAY, 0);
+		cal.set(Calendar.MINUTE, 0);
+		cal.set(Calendar.SECOND, 0);
+		cal.set(Calendar.MILLISECOND, 0);
+		return cal.getTime();
+	}
+
+	/**
+	 * 获取当前时间的结束时间
+	 * 
+	 * @param date
+	 * @return
+	 */
+	private Date getDateEndTime(Date date) {
+		Calendar cal = Calendar.getInstance();
+		cal.setTime(date);
+
+		cal.set(Calendar.HOUR_OF_DAY, 23);
+		cal.set(Calendar.MINUTE, 59);
+		cal.set(Calendar.SECOND, 59);
+		cal.set(Calendar.MILLISECOND, 999);
 		return cal.getTime();
 	}
 }
